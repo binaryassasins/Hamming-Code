@@ -1,6 +1,5 @@
 # Hamming-Code
 
-This program was designed to illustrate how the Hamming code is being implemented in detecting and correcting code
 ![1](https://user-images.githubusercontent.com/82915997/173056293-7306018c-9865-4c98-aaac-680249415b21.png)
 ![3](https://user-images.githubusercontent.com/82915997/173056317-35ee3d48-ddbe-46da-a34d-8c37388a8f50.png)
 ![4](https://user-images.githubusercontent.com/82915997/173056324-956ee064-dd17-4015-bab1-9f6ba0b4fcb5.png)
