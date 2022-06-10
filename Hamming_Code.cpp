@@ -1,7 +1,7 @@
 /**
  * @file Hamming_Code.cpp
  * @author Mohamad Syafiq Asyraf Bin Bharudin (https://github.com/binaryassasins)
- * @brief This program was designed to illustrate how the Hamming code being implemented in data transmission
+ * @brief This program was designed to illustrate how the Hamming code is being implemented in detecting and correcting code
  * @version 0.1
  * @date 2022-06-10
  * 
@@ -27,25 +27,36 @@ int main() {
    * Bitwise XOR operator (^) will return 0 if both operands has the same value (1 ^ 1 or 0 ^ 0, returns 0)
    */
 
-  int word[10], received[10], ed1, ed2, ed3;
+  int word[6], received[6], ed1, ed2, ed3;
 
   cout << "  This program was designed to illustrate how the Hamming code being implemented in data transmission" << endl;
 
   // 4 bits of word is our actual data
-  cout << "\n  Enter 4 bits of word: ";
+  /**
+   *              D7      D6      D5      P4      D3      P2      P1
+              |   1   |   1   |   0   |   0   |   1   |   1   |   0   |
+   *  Layout:     7       6       5       4       3       2       1
+      Array:     [0]     [1]     [2]     [3]     [4]     [5]     [6]
+   */ 
+  cout << "\n  Enter 4 bits of word (separated by spaces): ";
+  cin >> word[0]; 
+  cin >> word[1]; 
   cin >> word[2]; 
-  cin >> word[4]; 
-  cin >> word[5]; 
-  cin >> word[6];
+  cin >> word[4];
 
-  word[0] = word[2] ^ word[4] ^ word[6];
-  word[1] = word[2] ^ word[5] ^ word[6];
-  word[3] = word[4] ^ word[5] ^ word[6];
+  /**
+   * P1 -> D3 D5 D7
+   * P2 -> D3 D6 D7
+   * P4 -> D5 D6 D7
+   */
+  word[6] = word[4] ^ word[2] ^ word[0];
+  word[5] = word[4] ^ word[1] ^ word[0];
+  word[3] = word[2] ^ word[1] ^ word[0];
 
   cout << endl;
 
   cout << "  P = Parity bit position, D = Data bit position" << "\n" << endl;
-  cout << "\tP1" << "\t" << "P2" << "\t" << "D3" << "\t" << "P4" << "\t" << "D5" << "\t" << "D6" << "\t" << "D7" << endl;  
+  cout << "\tD7" << "\t" << "D6" << "\t" << "D5" << "\t" << "P4" << "\t" << "D3" << "\t" << "P2" << "\t" << "P1" << endl;  
   cout << "\t";
   for (int i = 0; i < 7; i++)
   {
@@ -53,12 +64,18 @@ int main() {
   }
 
   cout << endl;
-  cout << "\n  Parity bits: " << word[0] << " " << word[1] << " " << word[3] << endl;
-  cout << "  Data bits: " << word[2] << " " << word[4] << " " << word[5] << " " << word[6] << endl;
+  cout << "\n  Parity bits: " << word[6] << " " << word[5] << " " << word[3] << endl;
+  cout << "  Data bits: " << word[0] << " " << word[1] << " " << word[2] << " " << word[4] << endl;
   cout << endl;
 
+  /**
+   *              D7      D6      D5      P4      D3      P2      P1
+              |   1   |   1   |   1   |   0   |   1   |   1   |   0   |
+   *  Layout:     7       6       5       4       3       2       1
+      Array:     [0]     [1]     [2]     [3]     [4]     [5]     [6]
+   */ 
   // Assume that the data bits has been distorted (an error has been encountered)
-  cout << "  Enter 7 bits: ";
+  cout << "  Enter 7 bits (separated by spaces): ";
   for (int i = 0; i < 7; i++)
   {
     cin >> received[i];
@@ -71,14 +88,14 @@ int main() {
    * If it's an odd, throw 1
    * If it's an even, throw 0
    */
-  ed1 = received[0] ^ received[2] ^ received[4] ^ received[6];
-  ed2 = received[1] ^ received[2] ^ received[5] ^ received[6];
-  ed3 = received[3] ^ received[4] ^ received[5] ^ received[6];
+  ed1 = received[6] ^ received[4] ^ received[2] ^ received[0];
+  ed2 = received[5] ^ received[4] ^ received[1] ^ received[0];
+  ed3 = received[3] ^ received[2] ^ received[1] ^ received[0];
 
-  // Convert into decimal notation -> -1 since the first element is counted as 0
-  int pos = (ed1 * 1 + ed2 * 2 + ed3 * 4) - 1;
+  // Determine the position of the error (tot elements - position in the layout)
+  int pos = 7 - (ed1 * 1 + ed2 * 2 + ed3 * 4);
 
-  if (pos == -1)
+  if (pos == 7)
   {
     cout << "  There is no error" << endl;
   }
